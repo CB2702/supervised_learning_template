@@ -1,0 +1,51 @@
+# Building my own actions workflow
+# To check the python installation
+# also illustrates checking spark
+# +sql functions
+
+on:
+  push:
+    branches:
+      - master
+
+# Can also do only on changes to src
+# eg
+# on:
+#  push:
+#    paths:
+#      - 'src/**'
+
+jobs:
+  build_wheel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+            java-version: 11
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build wheel and install
+        run: |
+          python -m pip install --user --upgrade build
+          python -m build
+          # installing spark libraries, newer versions
+          # cause time conversion errors
+          pip install pyspark==3.2.1 pyarrow pandas==1.4.2 pytest
+          # now install the wheel file
+          find ./dist/*.whl | xargs pip install
+          # Now run pytest tests
+          pytest --disable-warnings ./tests
+      - name: Configure Git
+        run: |
+          git config --global user.email "apwheele@gmail.com"
+          git config --global user.name "apwheele"
+      - name: Commit and push wheel
+        run: |
+          git add -f ./dist/*.whl
+          git commit -m 'pushing new wheel'
+          git push
+      - run: echo "🍏 This job's status is ${{ job.status }}."
