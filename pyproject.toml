@@ -24,4 +24,4 @@ dependencies = [
 "Homepage" = "https://github.com/CB2702/supervised_learning_template"
 
 [tool.setuptools]
-packages = ["rename"] # e.g., if you have `packages/my_app`, use `my_app`
+packages = ["packages"] # e.g., if you have `packages/my_app`, use `my_app`
