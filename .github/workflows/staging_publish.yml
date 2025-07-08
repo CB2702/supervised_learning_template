@@ -42,9 +42,9 @@ jobs:
           git config --global user.name "CB2702"
       - name: Commit and push wheel
         run: |
-          git switch -c temp
           git add -f ./dist/*.whl
           git commit -m 'pushing new wheel'
           git push
-          git switch -
+      - name: checkout
+        uses: actions/checkout@v2
       - run: echo "This job's status is ${{ job.status }}."
