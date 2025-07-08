@@ -4,9 +4,9 @@
 # +sql functions
 
 on:
-  push:
+  pull_request:
     branches:
-      - master
+      - staging
 
 # Can also do only on changes to src
 # eg
@@ -41,11 +41,11 @@ jobs:
           pytest --disable-warnings ./tests
       - name: Configure Git
         run: |
-          git config --global user.email "apwheele@gmail.com"
-          git config --global user.name "apwheele"
+          git config --global user.email "corey.bevan@gmail.com"
+          git config --global user.name "CB2702"
       - name: Commit and push wheel
         run: |
           git add -f ./dist/*.whl
           git commit -m 'pushing new wheel'
           git push
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - run: echo "This job's status is ${{ job.status }}."
