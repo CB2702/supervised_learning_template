@@ -1,50 +1,38 @@
-# Building my own actions workflow
-# To check the python installation
-# also illustrates checking spark
-# +sql functions
+name: Build Python Wheel on PR to Staging
 
 on:
   pull_request:
     branches:
       - staging
-
-# Can also do only on changes to src
-# eg
-# on:
-#  push:
-#    paths:
-#      - 'src/**'
+    types: [opened, synchronize, reopened]
 
 jobs:
   build_wheel:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+
     steps:
-      - uses: actions/setup-java@v1
-        with:
-            java-version: 11
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.9
-      - name: Build wheel and install
+          python-version: '3.9' # Use your desired Python version, e.g., '3.9', '3.10', '3.11'
+
+      - name: Install build tools
         run: |
-          python -m pip install --user --upgrade build
+          python -m pip install --upgrade pip
+          pip install setuptools wheel build
+
+      - name: Build Python wheel
+        run: |
+          # This command will look for pyproject.toml or setup.py in your repository root.
+          # Ensure your setup.py/pyproject.toml correctly points to your 'packages' folder
+          # or is configured to include it in the distribution.
           python -m build
-          # installing spark libraries, newer versions
-          # cause time conversion errors
-          pip install pyspark==3.2.1 pyarrow pandas==1.4.2 pytest
-          # now install the wheel file
-          find ./dist/*.whl | xargs pip install
-      - name: Configure Git
-        run: |
-          git config --global user.email "corey.bevan@gmail.com"
-          git config --global user.name "CB2702"
-      - name: Commit and push wheel
-        run: |
-          git add -f ./dist/*.whl
-          git commit -m 'pushing new wheel'
-          git push
-      - name: checkout
-        uses: actions/checkout@v2
-      - run: echo "This job's status is ${{ job.status }}."
+
+      - name: Upload wheel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-wheel
+          path: dist/*.whl # Uploads all .whl files found in the dist/ directory
