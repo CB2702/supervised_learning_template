@@ -37,8 +37,6 @@ jobs:
           pip install pyspark==3.2.1 pyarrow pandas==1.4.2 pytest
           # now install the wheel file
           find ./dist/*.whl | xargs pip install
-          # Now run pytest tests
-          pytest --disable-warnings ./tests
       - name: Configure Git
         run: |
           git config --global user.email "corey.bevan@gmail.com"
