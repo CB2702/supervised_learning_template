@@ -9,6 +9,7 @@ authors = [
   { name="Corey Bevan", email="corey.bevan@googlemail.com" },
 ]
 description = "Template for supervised learning"
+readme = "README.md"
 requires-python = ">=3.6"
 # Add your dependencies here
 dependencies = [
