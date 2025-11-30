@@ -36,3 +36,9 @@ jobs:
         with:
           name: python-wheel
           path: dist/*.whl # Uploads all .whl files found in the dist/ directory
+          
+      - name:
+        uses: actions/upload-artifact@v4
+        with: 
+          name: model_pkl
+          path: mushroom_decision_tree\model.pkl
